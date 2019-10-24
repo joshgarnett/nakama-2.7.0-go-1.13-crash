@@ -5,7 +5,17 @@ This is a simple project showing the windows crash with Nakama 2.7.0 and Go 1.13
 Steps:
 
 ```
-docker-compose up
+# Simple example (fails)
+docker-compose -f docker-compose.yml build nakama
+docker-compose -f docker-compose.yml up
+
+# Alpine 3.10 Full build (fails)
+docker-compose -f docker-compose.alpine310.yml build nakama
+docker-compose -f docker-compose.alpine310.yml up
+
+# Alpine 3.9.4 Full build (works)
+docker-compose -f docker-compose.alpine39.yml build nakama
+docker-compose -f docker-compose.alpine39.yml up
 ```
 
 The crash will appear in the console logs after the nakama container starts and attempts to load the plugin module.

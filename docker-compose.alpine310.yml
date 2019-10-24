@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    container_name: nakama-crash-postgres-alpine310
+    image: postgres:11.3
+    restart: always
+    environment:
+    - POSTGRES_PASSWORD=password
+  nakama:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine310
+    container_name: nakama-crash-alpine310
+    entrypoint:
+      - "/bin/sh"
+      - "-ecx"
+      - >
+          /nakama/nakama migrate up --database.address postgres:password@postgres:5432/nakama &&
+          exec /nakama/nakama --database.address postgres:password@postgres:5432/nakama
+    restart: always
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7350/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
